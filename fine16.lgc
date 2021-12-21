@@ -1,0 +1,69 @@
+
+logic "fde x ac2".
+
+truth_values { b_b , b_f , b_n , b_t , f_b , f_f , f_n , f_t , n_b , n_f , n_n , n_t , t_b , t_f , t_n , t_t }.
+
+designated_truth_values { b_f , b_n , t_f , t_n }.
+
+operator(neg/1, mapping {
+	 (b_b) : b_b,
+	 (b_f) : b_t,
+	 (b_n) : b_n,
+	 (b_t) : b_f,
+	 (f_b) : t_b,
+	 (f_f) : t_t,
+	 (f_n) : t_n,
+	 (f_t) : t_f,
+	 (n_b) : n_b,
+	 (n_f) : n_t,
+	 (n_n) : n_n,
+	 (n_t) : n_f,
+	 (t_b) : f_b,
+	 (t_f) : f_t,
+	 (t_n) : f_n,
+	 (t_t) : f_f
+	}
+).
+
+operator(and/2, table [
+	        b_b, b_f, b_n, b_t, f_b, f_f, f_n, f_t, n_b, n_f, n_n, n_t, t_b, t_f, t_n, t_t,
+	  b_b,  b_b, b_b, b_b, b_b, f_b, f_b, f_b, f_b, f_b, f_b, f_b, f_b, b_b, b_b, b_b, b_b,
+	  b_f,  b_b, b_f, b_f, b_b, f_b, f_f, f_f, f_b, f_b, f_f, f_f, f_b, b_b, b_f, b_f, b_b,
+	  b_n,  b_b, b_f, b_n, b_t, f_b, f_f, f_n, f_t, f_b, f_f, f_n, f_t, b_b, b_f, b_n, b_t,
+	  b_t,  b_b, b_b, b_t, b_t, f_b, f_b, f_t, f_t, f_b, f_b, f_t, f_t, b_b, b_b, b_t, b_t,
+	  f_b,  f_b, f_b, f_b, f_b, f_b, f_b, f_b, f_b, f_b, f_b, f_b, f_b, f_b, f_b, f_b, f_b,
+	  f_f,  f_b, f_f, f_f, f_b, f_b, f_f, f_f, f_b, f_b, f_f, f_f, f_b, f_b, f_f, f_f, f_b,
+	  f_n,  f_b, f_f, f_n, f_t, f_b, f_f, f_n, f_t, f_b, f_f, f_n, f_t, f_b, f_f, f_n, f_t,
+	  f_t,  f_b, f_b, f_t, f_t, f_b, f_b, f_t, f_t, f_b, f_b, f_t, f_t, f_b, f_b, f_t, f_t,
+	  n_b,  f_b, f_b, f_b, f_b, f_b, f_b, f_b, f_b, n_b, n_b, n_b, n_b, n_b, n_b, n_b, n_b,
+	  n_f,  f_b, f_f, f_f, f_b, f_b, f_f, f_f, f_b, n_b, n_f, n_f, n_b, n_b, n_f, n_f, n_b,
+	  n_n,  f_b, f_f, f_n, f_t, f_b, f_f, f_n, f_t, n_b, n_f, n_n, n_t, n_b, n_f, n_n, n_t,
+	  n_t,  f_b, f_b, f_t, f_t, f_b, f_b, f_t, f_t, n_b, n_b, n_t, n_t, n_b, n_b, n_t, n_t,
+	  t_b,  b_b, b_b, b_b, b_b, f_b, f_b, f_b, f_b, n_b, n_b, n_b, n_b, t_b, t_b, t_b, t_b,
+	  t_f,  b_b, b_f, b_f, b_b, f_b, f_f, f_f, f_b, n_b, n_f, n_f, n_b, t_b, t_f, t_f, t_b,
+	  t_n,  b_b, b_f, b_n, b_t, f_b, f_f, f_n, f_t, n_b, n_f, n_n, n_t, t_b, t_f, t_n, t_t,
+	  t_t,  b_b, b_b, b_t, b_t, f_b, f_b, f_t, f_t, n_b, n_b, n_t, n_t, t_b, t_b, t_t, t_t
+	]
+).
+
+operator(or/2, table [
+	        b_b, b_f, b_n, b_t, f_b, f_f, f_n, f_t, n_b, n_f, n_n, n_t, t_b, t_f, t_n, t_t,
+	  b_b,  b_b, b_b, b_b, b_b, b_b, b_b, b_b, b_b, t_b, t_b, t_b, t_b, t_b, t_b, t_b, t_b,
+	  b_f,  b_b, b_f, b_f, b_b, b_b, b_f, b_f, b_b, t_b, t_f, t_f, t_b, t_b, t_f, t_f, t_b,
+	  b_n,  b_b, b_f, b_n, b_t, b_b, b_f, b_n, b_t, t_b, t_f, t_n, t_t, t_b, t_f, t_n, t_t,
+	  b_t,  b_b, b_b, b_t, b_t, b_b, b_b, b_t, b_t, t_b, t_b, t_t, t_t, t_b, t_b, t_t, t_t,
+	  f_b,  b_b, b_b, b_b, b_b, f_b, f_b, f_b, f_b, n_b, n_b, n_b, n_b, t_b, t_b, t_b, t_b,
+	  f_f,  b_b, b_f, b_f, b_b, f_b, f_f, f_f, f_b, n_b, n_f, n_f, n_b, t_b, t_f, t_f, t_b,
+	  f_n,  b_b, b_f, b_n, b_t, f_b, f_f, f_n, f_t, n_b, n_f, n_n, n_t, t_b, t_f, t_n, t_t,
+	  f_t,  b_b, b_b, b_t, b_t, f_b, f_b, f_t, f_t, n_b, n_b, n_t, n_t, t_b, t_b, t_t, t_t,
+	  n_b,  t_b, t_b, t_b, t_b, n_b, n_b, n_b, n_b, n_b, n_b, n_b, n_b, t_b, t_b, t_b, t_b,
+	  n_f,  t_b, t_f, t_f, t_b, n_b, n_f, n_f, n_b, n_b, n_f, n_f, n_b, t_b, t_f, t_f, t_b,
+	  n_n,  t_b, t_f, t_n, t_t, n_b, n_f, n_n, n_t, n_b, n_f, n_n, n_t, t_b, t_f, t_n, t_t,
+	  n_t,  t_b, t_b, t_t, t_t, n_b, n_b, n_t, n_t, n_b, n_b, n_t, n_t, t_b, t_b, t_t, t_t,
+	  t_b,  t_b, t_b, t_b, t_b, t_b, t_b, t_b, t_b, t_b, t_b, t_b, t_b, t_b, t_b, t_b, t_b,
+	  t_f,  t_b, t_f, t_f, t_b, t_b, t_f, t_f, t_b, t_b, t_f, t_f, t_b, t_b, t_f, t_f, t_b,
+	  t_n,  t_b, t_f, t_n, t_t, t_b, t_f, t_n, t_t, t_b, t_f, t_n, t_t, t_b, t_f, t_n, t_t,
+	  t_t,  t_b, t_b, t_t, t_t, t_b, t_b, t_t, t_t, t_b, t_b, t_t, t_t, t_b, t_b, t_t, t_t
+	]
+).
+

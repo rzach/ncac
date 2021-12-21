@@ -1,0 +1,30 @@
+logic "AC2".
+
+truth_values { b, t, f, n }.
+designated_truth_values { n , f }.
+
+operator(neg/1, mapping {
+	 (t) : f,
+	 (b) : b,
+	 (n) : n,
+	 (f) : t
+	}
+).
+
+operator(or/2, table [
+	      t, b, n, f,
+	  t,  t, b, t, b,
+	  b,  b, b, b, b,
+	  n,  t, b, n, f,
+	  f,  b, b, f, f
+	]
+).
+
+operator(and/2, table [
+	      t, b, n, f,
+	  t,  t, b, t, b,
+	  b,  b, b, b, b,
+	  n,  t, b, n, f,
+	  f,  b, b, f, f
+	]
+).

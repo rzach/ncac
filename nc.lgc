@@ -1,0 +1,48 @@
+logic "NC".
+
+truth_values { ff , fu , ft , uf , uu , ut , tf , tu , tt }.
+designated_truth_values { tf , tu , tt }.
+
+operator(neg/1, mapping {
+	 (ff) : ff,
+	 (fu) : uf,
+	 (ft) : tf,
+	 (uf) : fu,
+	 (uu) : uu,
+	 (ut) : tu,
+	 (tf) : ft,
+	 (tu) : ut,
+	 (tt) : tt
+	}
+).
+
+operator(and/2, table [
+	       ff, fu, ft, uf, uu, ut, tf, tu, tt,
+	  ff,  ff, fu, ft, uf, uu, ut, ff, fu, ft,
+	  fu,  fu, fu, fu, uu, uu, uu, fu, fu, fu,
+	  ft,  ft, fu, ft, ut, uu, ut, ft, fu, ft,
+	  uf,  uf, uu, ut, uf, uu, ut, uf, uu, ut,
+	  uu,  uu, uu, uu, uu, uu, uu, uu, uu, uu,
+	  ut,  ut, uu, ut, ut, uu, ut, ut, uu, ut,
+	  tf,  ff, fu, ft, uf, uu, ut, tf, tu, tt,
+	  tu,  fu, fu, fu, uu, uu, uu, tu, tu, tu,
+	  tt,  ft, fu, ft, ut, uu, ut, tt, tu, tt
+	]
+).
+
+operator(or/2, table [
+	       ff, fu, ft, uf, uu, ut, tf, tu, tt,
+	  ff,  ff, fu, ff, uf, uu, uf, tf, tu, tf,
+	  fu,  fu, fu, fu, uu, uu, uu, tu, tu, tu,
+	  ft,  ff, fu, ft, uf, uu, ut, tf, tu, tt,
+	  uf,  uf, uu, uf, uf, uu, uf, uf, uu, uf,
+	  uu,  uu, uu, uu, uu, uu, uu, uu, uu, uu,
+	  ut,  uf, uu, ut, uf, uu, ut, uf, uu, ut,
+	  tf,  tf, tu, tf, uf, uu, uf, tf, tu, tf,
+	  tu,  tu, tu, tu, uu, uu, uu, tu, tu, tu,
+	  tt,  tf, tu, tt, uf, uu, ut, tf, tu, tt
+	]
+).
+
+quantifier(forall, induced_by and/2).
+quantifier(exists, induced_by or/2).

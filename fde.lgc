@@ -1,0 +1,18 @@
+
+logic "FDE".
+
+truth_values { b, t, f, n }.
+designated_truth_values { b, t }.
+
+ordering(truth, "f < {n, b} < t").
+
+operator(neg/1, mapping {
+	 (t) : f,
+	 (b) : b,
+	 (n) : n,
+	 (f) : t
+	}
+).
+
+operator(and/2, inf(truth)).
+operator(or/2, sup(truth)).

@@ -1,0 +1,16 @@
+logic 
+FDE
+%
+truth_values {t,b,n,f}
+%
+designated_truth_values {1 0}
+%
+ordering truth
+f < {n, b} < t
+%
+operator neg/1 mapping
+3 1 2 0
+%
+operator and/2 bop inf truth
+%
+operator or/2 bop sup truth
