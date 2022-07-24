@@ -7,7 +7,7 @@ Philosophy](https://apcz.umk.pl/LLP/index).
 To run this code, you need to install
 [MUltlog](https://logic.at/multlog). (The version used to produce the
 results in the paper is archived at
-https://doi.org/10.5281/zenodo.8475). Then:
+https://doi.org/10.5281/zenodo.6893267.). Then:
 ```
 # multlog
 ```
