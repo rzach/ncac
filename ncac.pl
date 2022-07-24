@@ -8,19 +8,25 @@
 run :-
     format('Settin up the logics~n~n'),
     loadLogics,
-    format('~nMaking sure logic fine is actually the product of FDE and AC_2~n~n'),
+    format('~n~nMaking sure logic fine is actually the product of FDE and AC_2~n~n'),
     makeProduct(fde,ac2,fine16),
     isIso(I, fine,fine16),
     showHom(I, fine, fine16),
-    format('~nShow all homomorphisms from FC to NC~n~n'),
+    format('~n~nShow all homomorphisms from FC to NC~n~n'),
     (showHoms ; true),
-    format('~nCheck soundness of some 7-valued matrices~n~n'),
-    (checkAx ; true),
-    format('~nShow that the rest are also different from AC~n~n'),
-    (checkAC ; true),
-    format('~nFind and show all congruences of FC (this will take some time)~n~n'),
+    format('~n~nFind and show all congruences of FC (this will take some time)~n~n'),
     (showCong(fine), fail ; true),
-    format('~nDONE!~n'), !.
+    fineSeven,
+    format('~nDONE!~n'), 
+    !.
+
+% fineSeven -- run through the 7-valued matrices
+
+fineSeven :-
+    format('~n~nCheck soundness of some 7-valued matrices~n~n'),
+    (checkAx ; true),
+    format('~n~nShow that the rest are also different from AC~n~n'),
+    (checkAC ; true).
 
 % loadLogics -- load all the logics discussed in ncac.tex
 
@@ -44,22 +50,22 @@ showHoms :-
     fail.
 
 % checkAx -- check the sixteen 7-valued matrices for soundness
-% wrt to Ferguson's axioms.
+% wrt to the Ferguson axioms.
 
 checkAx :-
-    member(Lg, [fine7bf,fine7bfs,fine7bn,fine7bns,fine7tb,fine7tbs,fine7tf,fine7tfs,fine7tn,fine7tns,fine7tt,fine7tts,fine7bb,fine7bbs,fine7bt,fine7bts]),
+    fineLog(Lg),
     checkAx(Lg),
     fail.
 
-% checkAC -- four logics are sound wrt to all the axioms; show that
-% they make some inferences valid that shouldn't be.
+% checkAC -- four logics are sound wrt to all the axioms; find some
+% inferences they make valid that are invalid in NC
 
 checkAC :-
     member(Lg, [fine7bb,fine7bbs,fine7bt,fine7bts]),
     checkSublogicAC(Lg),
     fail.
 
-% checkIsos -- suceeds if Lg1 and Lg2 are FC_Vw^(*) 
+% checkIsos -- succeeds if Lg1 and Lg2 are FC_Vw^(*) 
 
 checkIsos :-
     setof(L, fineLog(L), Ls),
@@ -93,7 +99,7 @@ checkHoms :-
 axiom(ac1a, A, neg(neg(A))).
 axiom(ac1b, neg(neg(A)), A).
 axiom(ac2, A, and(A, A)).
-axiom(ac3, and(A,B), A).
+axiom(ac3, and(A,_B), A).
 axiom(ac5a, or(A,or(B,C)), or(or(A,B),C)).
 axiom(ac5b, or(or(A,B),C), or(A,or(B,C))).
 axiom(ac6a, or(A,and(B,C)), and(or(A,B),or(A,C))).
@@ -111,7 +117,7 @@ axiom(ac6b, and(or(A,B),or(A,C)), or(A,and(B,C))).
 % axiom(e10, and(A,or(B,C)), or(and(A,B),and(A,C))).
 % axiom(e11, or(and(A,B),and(A,C)), and(A,or(B,C))).
 
-% checkAx(Lg) -- check all the axioms of AC if they are valid in Lg
+% checkAx(Lg) -- check if all the axioms of AC are valid in Lg
 
 checkAx(Lg) :- 
     logName(Lg, LN),
@@ -133,13 +139,13 @@ checkAx(Lg, Ax) :-
         hasValue(Lg, B, V2),
         \+ member(V2, DTVs), ! ) 
     ->
-        format('  Axiom ~w fails in ~w:~n    ~w = ~w but~n    ~w = ~w~n',
+        format('  Axiom ~w fails in ~w:~n    ~w = ~w is designated but~n    ~w = ~w is not~n',
             [Ax, Lg, A, V1, B, V2])
     ;   true 
     ).
 
-% checkSublogicAC(Lg) -- checks if Lg is a sublogic of AC by looking for a
-% consequence valid in Lg not valid in NC.
+% checkSublogicAC(Lg) -- checks if Lg is a sublogic of AC by
+% looking for a consequence valid in Lg not valid in NC.
 
 checkSublogicAC(Lg) :-
     findFmla(Lg, and(A,B)),
@@ -147,10 +153,19 @@ checkSublogicAC(Lg) :-
     \+ isConseq(nc, [A], B),
     logName(Lg, LN),
     format('Logic ~w is not a sublogic of AC:~n', [LN]),
-    prettyCopy(A, Ar),
-    prettyCopy(B, Br),
-    format('  ~w entails ~w~n', [Ar,Br]),
-    format('  in ~w but not in AC~n', [LN]),
+    prettyCopy((A,B), (Ar,Br)),
+    format('  ~w entails ~w in ~w', [Ar,Br,LN]),
+    format('  but not in AC:~n', []),
+    logTVs(nc, TVs),
+    logDTVs(nc, DTVs),
+    term_variables((A,B), Vars),
+    listOfTVs(Vars, TVs),
+    hasValue(nc, A, V1),
+    member(V1, DTVs),
+    hasValue(nc, B, V2),
+    \+ member(V2, DTVs), 
+    format('  ~w = ~w is designated but~n    ~w = ~w is not~n',
+            [A, V1, B, V2]),
     !.
 
 % checkACN -- check if inference rule ACN is validity preserving in Lg.
@@ -173,8 +188,8 @@ checkAC9(Lg) :-
     \+ isConseq(Lg,[A],C),
     prettyFmla([A,B,C]).
 
-% makeProduct(Lg1, Lg2, Lg12) -- defines a new logic Lg12 as the
-% direct product of logics Lg1 and Lg2
+% makeFineProduct(Vfde, Vac) -- defines the two 7-valued Fine matrices 
+% for values Vfde and Vac, i.e., FC_Vfde/Vac and FC^*_Vfde/Vac
 
 makeFineProduct(Vfde, Vac) :-
     logTVs(fde, TVs1),
@@ -200,6 +215,8 @@ makeFineProduct(Vfde, Vac) :-
     assertz(logName(Lg, LN)),
     setColors(Lg, all),
     format('Logic ~w stored as ~w~n', [LN, Lg]),
+    showLogic(Lg),
+    % now make the starred logic
     format(atom(Lg2), 'fine7~w~ws', [Vfde,Vac]),
     format(atom(LN2), 'FC_~w~w^*', [Vfde,Vac]),
     copyLogic(Lg, Lg2, LN2),
@@ -213,22 +230,28 @@ makeFineProduct(Vfde, Vac) :-
         undesignateTVs(Lg2, Vs)
     ),
     setColors(Lg2, all),
-    format('Logic ~w stored as ~w~n', [LN2, Lg2]).
+    format('Logic ~w stored as ~w~n', [LN2, Lg2]),
+    showLogic(Lg2).
 
 % setFineProduct(Vfde, Vac, A1, A2, B) -- B is the set of truth values
-% of FC_Vfde/Vac
+% of FC_Vfde/Vac (A1 and and A2 are the truth values of FDE and AC2)
 
 setFineProduct(Vfde, Vac, A1, A2, B) :-
     setof((P1, P2),
     finePair(Vfde, Vac, P1, P2, A1, A2), B).
 
-finePair(Vfde, Vac, Vfde, P2, _, A2) :-
+% finePair(Vfde, _Vac, P1, P2, A1, A2) -- If A1 and A2 are the truth 
+% values of FDE and AC, respectively, then (P1, P2) is a truth value of 
+% FC_Vfde/Vac, i.e., either P1 = Vfde and P2 is any truth value of AC, or 
+% P1 != Vfde, then P2 = Vac.
+
+finePair(Vfde, _Vac, Vfde, P2, _, A2) :-
     member(P2, A2).
-finePair(Vfde, Vac, P1, Vac, A1, _) :-
+finePair(_Vfde, Vac, P1, Vac, A1, _) :-
     member(P1, A1).
 
-% mapFineProduct(Vfde, Vac, M1, M2, B) -- B is the map resulting from applying maps
-% M1 and M2 component-wise, but with Vac "dominant".
+% mapFineProduct(Vfde, Vac, M1, M2, B) -- B is the map resulting 
+% from applying maps M1 and M2 component-wise, but with Vac "dominant".
 
 mapFineProduct(Vfde, Vac, M1, M2, B) :-
     setof(Args:V,
