@@ -5,7 +5,9 @@ Ferguson's Matrices for Angell's AC", forthcoming in [Logic and Logical
 Philosophy](https://apcz.umk.pl/LLP/index).
 
 To run this code, you need to install
-[MUltlog](https://logic.at/multlog). Then:
+[MUltlog](https://logic.at/multlog). (The version used to produce the
+results in the paper is archived at
+https://doi.org/10.5281/zenodo.8475). Then:
 ```
 # multlog
 ```
